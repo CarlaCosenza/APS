@@ -20,6 +20,8 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import android.location.Address
 import android.location.Geocoder
+import android.os.Build
+import android.support.annotation.RequiresApi
 import android.support.design.widget.FloatingActionButton
 import android.util.Log
 import com.google.android.gms.maps.model.*
@@ -58,8 +60,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpRegiao() {
-        SharedData.instance.regioes.desenharRegiao(map)
+        //Desenha todas as regioes do SharedData
+        for (regiao in SharedData.instance.regioes) {
+            regiao.desenharRegiao(mapa = map)
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
