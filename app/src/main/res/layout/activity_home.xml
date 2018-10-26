@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
@@ -9,15 +10,54 @@
         android:id="@+id/map"
         class="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="112dp"
-        android:src="@android:drawable/ic_menu_search"/>
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="30dp"
+        android:layout_marginLeft="8dp"
+        android:src="@android:drawable/ic_menu_search" />
+
+    <TextView
+        android:id="@+id/userName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginLeft="80dp"
+        android:layout_marginVertical="30dp"
+        android:background="@color/colorPrimary"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="10dp"
+        android:text="User name"
+        android:textAlignment="center"
+        android:textColor="@color/white" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/userImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|start"
+        android:layout_marginLeft="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@mipmap/user_image"
+        android:scaleType="center"
+        android:src="@mipmap/user_image_round"
+        app:fabCustomSize="80dp"
+        app:maxImageSize="80dp" />
+
+    <View
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/regiaoInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:listitem="@layout/activity_home" />
+
 
 </android.support.design.widget.CoordinatorLayout>

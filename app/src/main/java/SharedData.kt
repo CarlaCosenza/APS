@@ -13,4 +13,11 @@ class SharedData private constructor(){
             Regiao("Karol", grauDePerigo = 7.0f ,pontos = arrayListOf(LatLng(-22.082799, -43.9), LatLng(-22.8, -43.3), LatLng(-22.4, -43.5)))
     )
 
+    fun findRegiao(nome: String): Regiao{
+        for (regiao in regioes){
+            if(regiao.nome == nome) return regiao
+        }
+        return Regiao(nome = "", grauDePerigo = 0f, pontos = arrayListOf())
+    }
+
 }

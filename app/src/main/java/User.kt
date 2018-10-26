@@ -6,4 +6,6 @@ class User private constructor(){
         val instance: User by lazy { Holder.INSTANCE }
     }
 
+    var nome: String = "Carla"
+
 }

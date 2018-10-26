@@ -23,11 +23,13 @@ class Regiao constructor(nome: String, grauDePerigo: Float, pontos: ArrayList<La
     @TargetApi(Build.VERSION_CODES.O)
     @RequiresApi(Build.VERSION_CODES.O)
     fun desenharRegiao(mapa: GoogleMap) {
-        mapa.addPolygon(PolygonOptions()
+        var polygon = mapa.addPolygon(PolygonOptions()
                 .addAll(pontos)
                 .strokeColor(Color.RED)
                 .strokeWidth(2f)
-                .fillColor( argb(grauDePerigo, 1f, 0f, 0f) ))
+                .fillColor( argb(grauDePerigo, 1f, 0f, 0f)))
+        polygon.tag = nome
+        polygon.isClickable = true
     }
 
 }

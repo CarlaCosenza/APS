@@ -1,14 +1,22 @@
 package com.example.carlacosenza.aps
 
+import SharedData
+import User
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.graphics.Color
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
+import android.support.annotation.RequiresApi
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
+import android.widget.TextView
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
 import com.google.android.gms.common.api.ResolvableApiException
@@ -18,29 +26,21 @@ import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
-import android.location.Address
-import android.location.Geocoder
-import android.os.Build
-import android.support.annotation.RequiresApi
-import android.support.design.widget.FloatingActionButton
-import android.util.Log
-import com.google.android.gms.maps.model.*
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.Polygon
 import java.io.IOException
 
-class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnPolygonClickListener {
 
     //Variaveis do mapa
-    override fun onMarkerClick(p0: Marker?) = false
-
-    // 1
     private lateinit var locationCallback: LocationCallback
-    // 2
     private lateinit var locationRequest: LocationRequest
     private var locationUpdateState = false
 
     companion object {
         private const val LOCATION_PERMISSION_REQUEST_CODE = 1
-        // 3
         private const val REQUEST_CHECK_SETTINGS = 2
     }
 
@@ -48,6 +48,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     private lateinit var map: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var lastLocation: Location
+
+    //Variaveis da view
+    lateinit var userNameText: TextView
 
     //SetUp Functions
     private fun setUpMap() {
@@ -68,6 +71,22 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
+    private fun setUpUserNameTextView() {
+        userNameText = findViewById(R.id.userName)
+        userNameText.text = User.instance.nome
+    }
+
+    private fun setUpView() {
+        // Hide the status bar.
+        //window.decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
+        // Remember that you should never show the action bar if the
+        // status bar is hidden, so hide that too if necessary.
+        //actionBar?.hide()
+
+        setUpUserNameTextView()
+    }
+
+    //Funcao onCreate
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home)
@@ -93,7 +112,10 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fab.setOnClickListener {
             loadPlacePicker()
         }
+
+        setUpView()
     }
+
 
     /**
      * Manipulates the map once available.
@@ -129,6 +151,9 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
         setUpRegiao()
     }
+
+    override fun onMarkerClick(p0: Marker?) = false
+
 
     private fun startLocationUpdates() {
         //1
@@ -235,18 +260,18 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         }
     }
 
-    // 2
     override fun onPause() {
         super.onPause()
         fusedLocationClient.removeLocationUpdates(locationCallback)
     }
 
-    // 3
     public override fun onResume() {
         super.onResume()
         if (!locationUpdateState) {
             startLocationUpdates()
         }
+
+        setUpView()
     }
 
     private fun loadPlacePicker() {
@@ -258,6 +283,12 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             e.printStackTrace()
         } catch (e: GooglePlayServicesNotAvailableException) {
             e.printStackTrace()
+        }
+    }
+
+    override fun onPolygonClick(p0: Polygon?) {
+        if (p0 != null) {
+            val regiaoSelecionada = SharedData.instance.findRegiao(p0.tag.toString())
         }
     }
 }
