@@ -49,15 +49,20 @@
         app:maxImageSize="80dp" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/blurView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:layout_anchor="@+id/map"
+        app:layout_anchorGravity="left|center" />
 
-    <android.support.v7.widget.RecyclerView
+    <View
         android:id="@+id/regiaoInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:listitem="@layout/activity_home" />
+        android:layout_width="250dp"
+        android:layout_height="350dp"
+        app:layout_anchor="@+id/map"
+        app:layout_anchorGravity="center_vertical|center"
+        android:background="@drawable/round_corner"
+        android:translationZ="10dp"/>
 
 
 </android.support.design.widget.CoordinatorLayout>

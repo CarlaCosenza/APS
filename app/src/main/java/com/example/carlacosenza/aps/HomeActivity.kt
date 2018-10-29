@@ -2,10 +2,12 @@ package com.example.carlacosenza.aps
 
 import SharedData
 import User
+import Regiao
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.location.Location
@@ -16,6 +18,7 @@ import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.View
 import android.widget.TextView
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException
 import com.google.android.gms.common.GooglePlayServicesRepairableException
@@ -31,6 +34,8 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.Polygon
 import java.io.IOException
+import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnPolygonClickListener {
 
@@ -51,6 +56,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     //Variaveis da view
     lateinit var userNameText: TextView
+    lateinit var blurView: View
+    lateinit var regiaoInfo: View
 
     //SetUp Functions
     private fun setUpMap() {
@@ -62,6 +69,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
             return
         }
     }
+
+
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setUpRegiao() {
@@ -76,6 +85,16 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         userNameText.text = User.instance.nome
     }
 
+    private fun setUpBlurView() {
+        blurView = findViewById(R.id.blurView)
+        blurView.visibility = View.INVISIBLE
+    }
+
+    private fun setUpRegiaoInfo() {
+        regiaoInfo = findViewById(R.id.regiaoInfo)
+        regiaoInfo.visibility = View.INVISIBLE
+    }
+
     private fun setUpView() {
         // Hide the status bar.
         //window.decorView.systemUiVisibility = android.view.View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -84,6 +103,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         //actionBar?.hide()
 
         setUpUserNameTextView()
+        setUpBlurView()
+        setUpRegiaoInfo()
     }
 
     //Funcao onCreate
@@ -112,6 +133,8 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
         fab.setOnClickListener {
             loadPlacePicker()
         }
+
+        SharedData.instance.regioes = readfile()
 
         setUpView()
     }
@@ -287,8 +310,49 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
     }
 
     override fun onPolygonClick(p0: Polygon?) {
+        Log.d("POLYGON", "chamando funcao")
         if (p0 != null) {
+            p0.fillColor = Color.BLUE
             val regiaoSelecionada = SharedData.instance.findRegiao(p0.tag.toString())
+            blurView.visibility = View.VISIBLE
+            regiaoInfo.visibility = View.VISIBLE
+            Log.d("POLYGON", "ENTROU e nao null")
         }
+        Log.d("POLYGON", "ENTROU e null")
+    }
+
+    fun readfile(): ArrayList<Regiao> {
+        var regioes = ArrayList<Regiao>()
+        var numeroDeRegioes = 7
+
+        var todoTexto = applicationContext.assets.open("LimiteBairros.txt").bufferedReader().use() {
+            it.readText()
+        }
+
+        var tokens = todoTexto.split("\n")
+
+        for(i in 0..(numeroDeRegioes - 1)){
+            Log.d("LOOP GET PONTOS", "entrei")
+            var arraylatitlong = ArrayList<LatLng>()
+            var nome: String = tokens[2*i]
+            var coord = tokens[(2*i) + 1]
+
+            Log.d("LOOP NOME", "$nome")
+            //Log.d("LOOP COOR", "$coord")
+
+            var pontos = coord.split(",")
+            for(j in 0..(pontos.size-2)){
+                var coordenadas = pontos[j].split(" ")
+                var ponto = LatLng(coordenadas[0].toDouble(),coordenadas[1].toDouble())
+                arraylatitlong.add(ponto)
+            }
+
+            Log.d("LOOP ADD REG", "$nome , $arraylatitlong")
+
+            regioes.add(Regiao(nome, grauDePerigo = ThreadLocalRandom.current().nextInt(0,10).toFloat(), pontos = arraylatitlong))
+
+        }
+
+        return regioes
     }
 }

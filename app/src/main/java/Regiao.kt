@@ -16,7 +16,7 @@ class Regiao constructor(nome: String, grauDePerigo: Float, pontos: ArrayList<La
 
     init{
         this.nome = nome
-        this.grauDePerigo = grauDePerigo/10
+        this.grauDePerigo = grauDePerigo/11
         this.pontos = pontos
     }
 
@@ -29,7 +29,7 @@ class Regiao constructor(nome: String, grauDePerigo: Float, pontos: ArrayList<La
                 .strokeWidth(2f)
                 .fillColor( argb(grauDePerigo, 1f, 0f, 0f)))
         polygon.tag = nome
-        polygon.isClickable = true
+        polygon.setClickable(true)
     }
 
 }
