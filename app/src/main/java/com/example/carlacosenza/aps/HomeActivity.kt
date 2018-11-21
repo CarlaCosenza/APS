@@ -1,8 +1,8 @@
 package com.example.carlacosenza.aps
 
+import Regiao
 import SharedData
 import User
-import Regiao
 import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
@@ -323,7 +323,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
 
     fun readfile(): ArrayList<Regiao> {
         var regioes = ArrayList<Regiao>()
-        var numeroDeRegioes = 7
+        var numeroDeRegioes = 18
 
         var todoTexto = applicationContext.assets.open("LimiteBairros.txt").bufferedReader().use() {
             it.readText()
@@ -347,7 +347,7 @@ class HomeActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMarker
                 arraylatitlong.add(ponto)
             }
 
-            Log.d("LOOP ADD REG", "$nome , $arraylatitlong")
+            //Log.d("LOOP ADD REG", "$nome , $arraylatitlong")
 
             regioes.add(Regiao(nome, grauDePerigo = ThreadLocalRandom.current().nextInt(0,10).toFloat(), pontos = arraylatitlong))
 
